@@ -12,10 +12,9 @@ struct Photo: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case imageID = "id"
-        case secret
         case serverID = "server"
         case farmID = "farm"
-        case title
+        case secret, title
     }
 
     var imageID: String

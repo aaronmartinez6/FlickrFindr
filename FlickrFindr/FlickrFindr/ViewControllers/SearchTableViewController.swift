@@ -24,6 +24,8 @@ class SearchTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        title = "Flickr Findr"
+
         imageProvider = ImageProvider()
 
         view.backgroundColor = .systemBackground
@@ -43,9 +45,6 @@ class SearchTableViewController: UITableViewController {
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     // MARK: - Table view data source
@@ -64,24 +63,40 @@ class SearchTableViewController: UITableViewController {
         else { return UITableViewCell() }
 
         cell.configure(with: photo)
-        imageProvider?.fetchImage(farmID: photo.farmID,
-                                  serverID: photo.serverID,
-                                  imageID: photo.imageID,
-                                  secret: photo.secret) { result in
-                                    DispatchQueue.main.async {
-                                        switch result {
-                                        case .success(let image):
-                                            guard let indexPathOfCell = tableView.indexPath(for: cell),
-                                                indexPathOfCell == indexPath else { return }
 
-                                            cell.photoImageView?.image = image
-                                        case .failure(let error):
-                                            print(error)
-                                        }
-                                    }
+        imageProvider?.fetchImage(farmID: photo.farmID, serverID: photo.serverID, imageID: photo.imageID, secret: photo.secret) { result in
+
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let image):
+                    guard let indexPathOfCell = tableView.indexPath(for: cell),
+                        indexPathOfCell == indexPath else { return }
+
+                    cell.photoImageView?.image = image
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
 
         return cell
+    }
+
+}
+
+// MARK: - UITableViewDataSourcePrefetching
+
+extension SearchTableViewController: UITableViewDataSourcePrefetching {
+
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+
+        indexPaths.forEach { indexPath in
+            guard let photo = imageProvider?.photos[indexPath.row] else { return }
+
+            imageProvider?.fetchImage(farmID: photo.farmID, serverID: photo.serverID, imageID: photo.imageID, secret: photo.secret) { _ in
+                // Image is now in the cache
+            }
+        }
     }
 
 }
@@ -92,6 +107,12 @@ extension SearchTableViewController: UISearchBarDelegate {
 
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         return true
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.isEmpty == true {
+            // Reload table view with previous search suggestions
+        }
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

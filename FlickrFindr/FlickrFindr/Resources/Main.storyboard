@@ -24,15 +24,15 @@
                             </scopeButtonTitles>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PhotoCell" rowHeight="383" id="4hh-Cl-YS8" customClass="PhotoTableViewCell" customModule="FlickrFindr" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PhotoCell" rowHeight="383" id="4hh-Cl-YS8" customClass="PhotoTableViewCell" customModule="FlickrFindr" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="84" width="414" height="383"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4hh-Cl-YS8" id="cRq-zn-1BQ">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="383"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ugo-An-EAf">
-                                            <rect key="frame" x="41.5" y="21" width="331" height="351"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ugo-An-EAf">
+                                            <rect key="frame" x="41.5" y="19" width="331" height="353"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wUx-yI-VJO">
                                                     <rect key="frame" x="0.0" y="0.0" width="331" height="331"/>
@@ -41,7 +41,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="llb-dR-bew">
-                                                    <rect key="frame" x="0.0" y="341" width="331" height="10"/>
+                                                    <rect key="frame" x="0.0" y="339" width="331" height="14"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -53,7 +53,7 @@
                                         <constraint firstItem="Ugo-An-EAf" firstAttribute="centerX" secondItem="cRq-zn-1BQ" secondAttribute="centerX" id="CVI-j9-lNY"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="Ugo-An-EAf" secondAttribute="bottom" id="G1t-IN-PQi"/>
                                         <constraint firstItem="Ugo-An-EAf" firstAttribute="width" secondItem="cRq-zn-1BQ" secondAttribute="width" multiplier="0.8" id="h36-0b-IaW"/>
-                                        <constraint firstItem="Ugo-An-EAf" firstAttribute="top" secondItem="cRq-zn-1BQ" secondAttribute="topMargin" constant="10" id="xpJ-H5-4T2"/>
+                                        <constraint firstItem="Ugo-An-EAf" firstAttribute="top" secondItem="cRq-zn-1BQ" secondAttribute="topMargin" constant="8" id="xpJ-H5-4T2"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>

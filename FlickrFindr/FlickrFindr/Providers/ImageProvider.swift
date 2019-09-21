@@ -20,11 +20,12 @@ class ImageProvider {
     private let baseURL = URL(string: "https://api.flickr.com/services/rest")!
     private let apiKey = "1508443e49213ff84d566777dc211f2a"
 
+    let cache = NSCache<NSURL, UIImage>()
+
     var photos = [Photo]()
 
     // Photo search
     // https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=1508443e49213ff84d566777dc211f2a&text=dog&format=json&per_page=25
-
 
     func fetchPhotos(for searchTerm: String, completion: @escaping(Result<Bool,ImageProviderError>) -> Void) {
 
@@ -69,10 +70,15 @@ class ImageProvider {
         guard let url = URL(string: urlString)?
             .appendingPathComponent(serverID)
             .appendingPathComponent("\(imageID)_\(secret)")
-            .appendingPathExtension("jpg")
+            .appendingPathExtension("jpg"),
+            let nsUrl = NSURL(string: url.absoluteString)
             else { return completion(.failure(.failedToConstructURL)) }
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        if let image = cache.object(forKey: nsUrl) {
+            return completion(.success(image))
+        }
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             // Handle error
             if let error = error {
                 completion(.failure(.networkError(error)))
@@ -81,6 +87,8 @@ class ImageProvider {
             guard let data = data,
                 let image = UIImage(data: data)
                 else { return completion(.failure(.failedToUnwrapData)) }
+
+            self?.cache.setObject(image, forKey: nsUrl)
 
             completion(.success(image))
         }.resume()
