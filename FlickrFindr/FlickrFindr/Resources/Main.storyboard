@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="al2-US-PS0">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Root View Controller-->
+        <scene sceneID="KOo-Qd-F9l">
+            <objects>
+                <tableViewController id="Bww-WZ-Kz7" customClass="SearchTableViewController" customModule="FlickrFindr" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Jev-NY-8hP">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="qV0-eP-PIb">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <scopeButtonTitles>
+                                <string>Title</string>
+                                <string>Title</string>
+                            </scopeButtonTitles>
+                        </searchBar>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PhotoCell" rowHeight="383" id="4hh-Cl-YS8" customClass="PhotoTableViewCell" customModule="FlickrFindr" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="84" width="414" height="383"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4hh-Cl-YS8" id="cRq-zn-1BQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="383"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ugo-An-EAf">
+                                            <rect key="frame" x="41.5" y="21" width="331" height="351"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wUx-yI-VJO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="331" height="331"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="wUx-yI-VJO" secondAttribute="height" multiplier="1:1" id="ElC-3b-K8g"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="llb-dR-bew">
+                                                    <rect key="frame" x="0.0" y="341" width="331" height="10"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Ugo-An-EAf" firstAttribute="centerX" secondItem="cRq-zn-1BQ" secondAttribute="centerX" id="CVI-j9-lNY"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Ugo-An-EAf" secondAttribute="bottom" id="G1t-IN-PQi"/>
+                                        <constraint firstItem="Ugo-An-EAf" firstAttribute="width" secondItem="cRq-zn-1BQ" secondAttribute="width" multiplier="0.8" id="h36-0b-IaW"/>
+                                        <constraint firstItem="Ugo-An-EAf" firstAttribute="top" secondItem="cRq-zn-1BQ" secondAttribute="topMargin" constant="10" id="xpJ-H5-4T2"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="photoImageView" destination="wUx-yI-VJO" id="n80-h4-ZLJ"/>
+                                    <outlet property="titleLabel" destination="llb-dR-bew" id="WCH-h4-sBJ"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Bww-WZ-Kz7" id="MTJ-2U-TTB"/>
+                            <outlet property="delegate" destination="Bww-WZ-Kz7" id="8DD-6V-B8F"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="gGp-Za-ujK"/>
+                    <connections>
+                        <outlet property="searchBar" destination="qV0-eP-PIb" id="tnn-t2-1xB"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f9C-Lj-BZf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="76.811594202898561" y="43.526785714285715"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="k3Y-cY-Si2">
+            <objects>
+                <navigationController id="al2-US-PS0" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="NgI-5r-l2G">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Bww-WZ-Kz7" kind="relationship" relationship="rootViewController" id="UFk-1i-r9j"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uom-Ba-APM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-842" y="44"/>
+        </scene>
+    </scenes>
+</document>
