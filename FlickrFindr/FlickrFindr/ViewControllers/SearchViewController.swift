@@ -1,5 +1,5 @@
 //
-//  SearchTableViewController.swift
+//  SearchViewController.swift
 //  FlickrFindr
 //
 //  Created by Aaron Martinez on 9/20/19.
@@ -8,9 +8,10 @@
 
 import UIKit
 
-class SearchTableViewController: UITableViewController {
+class SearchViewController: UIViewController {
     
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var tableView: UITableView!
 
     var imageProvider: ImageProvider?
 
@@ -43,21 +44,27 @@ class SearchTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 300
         tableView.rowHeight = UITableView.automaticDimension
     }
+
+    private func presentNoResultsAlert() {
+        let alertController = UIAlertController(title: NSLocalizedString("No Results Founds", comment: "Alert user sees is their search returned zero results"), message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "User accepting that their search returned zero results"), style: .default, handler: nil))
+        navigationController?.present(alertController, animated: true, completion: nil)
+    }
 }
 
-// MARK: - TableViewDataSource
+// MARK: - UITableViewDataSource
 
-extension SearchTableViewController {
+extension SearchViewController: UITableViewDataSource {
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return imageProvider?.photos.count ?? 0
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell", for: indexPath) as?   PhotoTableViewCell,
             let photo = imageProvider?.photos[indexPath.row]
             else { return UITableViewCell() }
@@ -82,9 +89,9 @@ extension SearchTableViewController {
 
 // MARK: - UITableViewDelegate
 
-extension SearchTableViewController {
+extension SearchViewController: UITableViewDelegate {
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let photo = imageProvider?.photos[safe: indexPath.row],
             let imageProvider = imageProvider
             else { return }
@@ -97,7 +104,7 @@ extension SearchTableViewController {
 
 // MARK: - UITableViewDataSourcePrefetching
 
-extension SearchTableViewController: UITableViewDataSourcePrefetching {
+extension SearchViewController: UITableViewDataSourcePrefetching {
 
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
 
@@ -110,9 +117,9 @@ extension SearchTableViewController: UITableViewDataSourcePrefetching {
 
 }
 
-// MARK: - Search Bar Delegate
+// MARK: - UISearchBar Delegate
 
-extension SearchTableViewController: UISearchBarDelegate {
+extension SearchViewController: UISearchBarDelegate {
 
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         return true
@@ -126,6 +133,8 @@ extension SearchTableViewController: UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+        imageProvider?.clearPhotosSearchResults()
+        tableView.reloadData()
 
         guard let searchTerm = searchBar.text,
             !searchTerm.isEmpty
@@ -148,12 +157,6 @@ extension SearchTableViewController: UISearchBarDelegate {
                 }
             }
         }
-    }
-
-    private func presentNoResultsAlert() {
-        let alertController = UIAlertController(title: NSLocalizedString("No Results Founds", comment: "Alert user sees is their search returned zero results"), message: nil, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "User accepting that their search returned zero results"), style: .default, handler: nil))
-        navigationController?.present(alertController, animated: true, completion: nil)
     }
     
 }

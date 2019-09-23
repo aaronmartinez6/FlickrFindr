@@ -20,34 +20,30 @@ class ImageProvider {
     private let baseURL = URL(string: "https://api.flickr.com/services/rest")!
     private let apiKey = "1508443e49213ff84d566777dc211f2a"
 
-    let cache = NSCache<NSURL, UIImage>()
+    // Flickr API url parameter keys
+    private static let methodUrlParameterKey = "method"
+    private static let apiKeyUrlParameterKey = "api_key"
+    private static let formatUrlParameterKey = "format"
+    private static let noJsonCallbackUrlParameterKey = "nojsoncallback"
+    private static let perPageUrlParameterKey = "per_page"
+    private static let pageUrlParameterKey = "page"
+    private static let textUrlParameterKey = "text"
 
-    var photos = [Photo]()
+    private let cache = NSCache<NSURL, UIImage>()
 
-    // Photo search url format
-    // https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=1508443e49213ff84d566777dc211f2a&text=dog&format=json&per_page=25
+    private(set) var photos = [Photo]()
+
+    private var currentPage = 0
 
     func fetchPhotos(for searchTerm: String, completion: @escaping(Result<Bool,ImageProviderError>) -> Void) {
 
-        let parameters = [
-            "method":"flickr.photos.search",
-            "api_key":apiKey,
-            "format":"json",
-            "nojsoncallback":"1",
-            "per_page":"25",
-            "text":searchTerm
-        ]
-        let queryItems = parameters.compactMap { URLQueryItem(name: $0.key, value: $0.value) }
-        var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
-        urlComponents?.queryItems = queryItems
+        guard let photosSearchURL = searchURL(for: searchTerm) else { return completion(.failure(.failedToConstructURL)) }
 
-        guard let requestURL = urlComponents?.url else { return completion(.failure(.failedToConstructURL)) }
-
-        URLSession.shared.dataTask(with: requestURL) { [weak self] data, response, error in
-            // Handle this error better
+        URLSession.shared.dataTask(with: photosSearchURL) { [weak self] data, response, error in
             if let error = error {
                 completion(.failure(.networkError(error)))
             }
+
             guard let data = data else { return completion(.failure(.failedToUnwrapData)) }
 
             let decoder = JSONDecoder()
@@ -59,6 +55,23 @@ class ImageProvider {
             }
 
         }.resume()
+    }
+
+    // Photo search url format https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=1508443e49213ff84d566777dc211f2a&text=dog&format=json&per_page=25
+    private func searchURL(for searchTerm: String) -> URL? {
+        let parameters = [
+            ImageProvider.methodUrlParameterKey:"flickr.photos.search",
+            ImageProvider.apiKeyUrlParameterKey:apiKey,
+            ImageProvider.formatUrlParameterKey:"json",
+            ImageProvider.noJsonCallbackUrlParameterKey:"1",
+            ImageProvider.perPageUrlParameterKey:"25",
+            ImageProvider.textUrlParameterKey:searchTerm
+        ]
+        let queryItems = parameters.compactMap { URLQueryItem(name: $0.key, value: $0.value) }
+        var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
+        urlComponents?.queryItems = queryItems
+
+        return urlComponents?.url
     }
 
     // Image request url format
@@ -79,7 +92,6 @@ class ImageProvider {
         }
 
         URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            // Handle error
             if let error = error {
                 completion(.failure(.networkError(error)))
             }
@@ -92,7 +104,9 @@ class ImageProvider {
 
             completion(.success(image))
         }.resume()
-
     }
 
+    func clearPhotosSearchResults() {
+        photos = []
+    }
 }
