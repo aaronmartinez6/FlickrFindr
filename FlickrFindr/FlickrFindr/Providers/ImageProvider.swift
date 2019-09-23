@@ -24,7 +24,7 @@ class ImageProvider {
 
     var photos = [Photo]()
 
-    // Photo search
+    // Photo search url format
     // https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=1508443e49213ff84d566777dc211f2a&text=dog&format=json&per_page=25
 
     func fetchPhotos(for searchTerm: String, completion: @escaping(Result<Bool,ImageProviderError>) -> Void) {
@@ -61,15 +61,15 @@ class ImageProvider {
         }.resume()
     }
 
-    // URL format
+    // Image request url format
     // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
 
-    func fetchImage(farmID: Int, serverID: String, imageID: String, secret: String, completion: @escaping(Result<UIImage,ImageProviderError>) -> Void) {
+    func fetchImage(for photo: Photo, completion: @escaping(Result<UIImage,ImageProviderError>) -> Void) {
 
-        let urlString = "https://farm" + String(farmID) + ".staticflickr.com"
+        let urlString = "https://farm" + String(photo.farmID) + ".staticflickr.com"
         guard let url = URL(string: urlString)?
-            .appendingPathComponent(serverID)
-            .appendingPathComponent("\(imageID)_\(secret)")
+            .appendingPathComponent(photo.serverID)
+            .appendingPathComponent("\(photo.imageID)_\(photo.secret)")
             .appendingPathExtension("jpg"),
             let nsUrl = NSURL(string: url.absoluteString)
             else { return completion(.failure(.failedToConstructURL)) }
@@ -95,7 +95,4 @@ class ImageProvider {
 
     }
 
-    private func requestURL(method: String, api_key: String, format: String, resultsPerPage: Int, page: Int, text: String) {
-
-    }
 }

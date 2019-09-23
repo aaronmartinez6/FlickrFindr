@@ -34,7 +34,7 @@ class SearchTableViewController: UITableViewController {
         NSLayoutConstraint.activate([
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
+        ])
 
         searchBar.delegate = self
         searchBar.placeholder = NSLocalizedString("What would you like to see?", comment: "Placeholder text in search bar.")
@@ -42,12 +42,12 @@ class SearchTableViewController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 300
         tableView.rowHeight = UITableView.automaticDimension
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
     }
+}
 
-    // MARK: - Table view data source
+// MARK: - TableViewDataSource
+
+extension SearchTableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -60,26 +60,37 @@ class SearchTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell", for: indexPath) as?   PhotoTableViewCell,
             let photo = imageProvider?.photos[indexPath.row]
-        else { return UITableViewCell() }
+            else { return UITableViewCell() }
 
         cell.configure(with: photo)
 
-        imageProvider?.fetchImage(farmID: photo.farmID, serverID: photo.serverID, imageID: photo.imageID, secret: photo.secret) { result in
-
+        imageProvider?.fetchImage(for: photo) { result in
             DispatchQueue.main.async {
-                switch result {
-                case .success(let image):
-                    guard let indexPathOfCell = tableView.indexPath(for: cell),
-                        indexPathOfCell == indexPath else { return }
+                if case let .success(image) = result,
+                    let indexPathOfCell = tableView.indexPath(for: cell),
+                    indexPathOfCell == indexPath {
 
                     cell.photoImageView?.image = image
-                case .failure(let error):
-                    print(error)
                 }
             }
         }
 
         return cell
+    }
+
+}
+
+// MARK: - UITableViewDelegate
+
+extension SearchTableViewController {
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let photo = imageProvider?.photos[safe: indexPath.row],
+            let imageProvider = imageProvider
+            else { return }
+
+        let photoDetailViewController = PhotoDetailViewController(photo: photo, imageProvider: imageProvider)
+        navigationController?.pushViewController(photoDetailViewController, animated: true)
     }
 
 }
@@ -91,11 +102,9 @@ extension SearchTableViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
 
         indexPaths.forEach { indexPath in
-            guard let photo = imageProvider?.photos[indexPath.row] else { return }
+            guard let photo = imageProvider?.photos[safe: indexPath.row] else { return }
 
-            imageProvider?.fetchImage(farmID: photo.farmID, serverID: photo.serverID, imageID: photo.imageID, secret: photo.secret) { _ in
-                // Image is now in the cache
-            }
+            imageProvider?.fetchImage(for: photo) { _ in } // Image is now in the cache
         }
     }
 
@@ -126,14 +135,25 @@ extension SearchTableViewController: UISearchBarDelegate {
 
         imageProvider?.fetchPhotos(for: searchTerm) { [weak self] result in
             DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
+                self?.tableView.reloadData()
+
                 switch result {
                 case .failure(let error):
                     print(error)
                 case .success(_):
-                    self?.activityIndicator.stopAnimating()
-                    self?.tableView.reloadData()
+                    if self?.imageProvider?.photos.isEmpty == true {
+                        self?.presentNoResultsAlert()
+                    }
                 }
             }
         }
     }
+
+    private func presentNoResultsAlert() {
+        let alertController = UIAlertController(title: NSLocalizedString("No Results Founds", comment: "Alert user sees is their search returned zero results"), message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "User accepting that their search returned zero results"), style: .default, handler: nil))
+        navigationController?.present(alertController, animated: true, completion: nil)
+    }
+    
 }

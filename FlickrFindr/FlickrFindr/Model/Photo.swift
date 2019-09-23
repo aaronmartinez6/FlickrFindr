@@ -6,15 +6,16 @@
 //  Copyright © 2019 Aaron Martinez. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 struct Photo: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case imageID = "id"
+        case secret
         case serverID = "server"
         case farmID = "farm"
-        case secret, title
+        case title
     }
 
     var imageID: String
@@ -22,7 +23,6 @@ struct Photo: Decodable {
     var serverID: String
     var farmID: Int
     var title: String
-    var image: UIImage?
 }
 
 struct PhotosDictionary: Decodable {

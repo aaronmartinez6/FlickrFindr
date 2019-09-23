@@ -20,9 +20,12 @@ class PhotoTableViewCell: UITableViewCell {
         photoImageView.backgroundColor = .systemGray2
         photoImageView.layer.cornerRadius = 15
         photoImageView.clipsToBounds = true
-        photoImageView.image = photo.image
 
         titleLabel.text = photo.title
     }
 
+    override func prepareForReuse() {
+        photoImageView.image = nil
+        titleLabel.text = nil
+    }
 }

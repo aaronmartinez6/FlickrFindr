@@ -17,6 +17,8 @@
 		33C23D2C233567AF000DCBE4 /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C23D2B233567AF000DCBE4 /* SearchTableViewController.swift */; };
 		33C23D2E2335693E000DCBE4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33C23D2D2335693E000DCBE4 /* Main.storyboard */; };
 		33C23D3023357B43000DCBE4 /* PhotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C23D2F23357B43000DCBE4 /* PhotoTableViewCell.swift */; };
+		33C23DC3233697A4000DCBE4 /* PhotoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C23DC2233697A4000DCBE4 /* PhotoDetailViewController.swift */; };
+		33C23DC52338668E000DCBE4 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C23DC42338668E000DCBE4 /* Array+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		33C23D2B233567AF000DCBE4 /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
 		33C23D2D2335693E000DCBE4 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		33C23D2F23357B43000DCBE4 /* PhotoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTableViewCell.swift; sourceTree = "<group>"; };
+		33C23DC2233697A4000DCBE4 /* PhotoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewController.swift; sourceTree = "<group>"; };
+		33C23DC42338668E000DCBE4 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +94,7 @@
 				33C23D2A233566BB000DCBE4 /* Providers */,
 				33C23D3123357B5C000DCBE4 /* Views */,
 				33C23D2623356635000DCBE4 /* Resources */,
+				33C23DC42338668E000DCBE4 /* Array+Extensions.swift */,
 			);
 			path = FlickrFindr;
 			sourceTree = "<group>";
@@ -128,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				33C23D2B233567AF000DCBE4 /* SearchTableViewController.swift */,
+				33C23DC2233697A4000DCBE4 /* PhotoDetailViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -252,6 +258,8 @@
 				33C23D29233566B5000DCBE4 /* ImageProvider.swift in Sources */,
 				33C23D2C233567AF000DCBE4 /* SearchTableViewController.swift in Sources */,
 				33C23D3023357B43000DCBE4 /* PhotoTableViewCell.swift in Sources */,
+				33C23DC52338668E000DCBE4 /* Array+Extensions.swift in Sources */,
+				33C23DC3233697A4000DCBE4 /* PhotoDetailViewController.swift in Sources */,
 				33C23D2423355EBC000DCBE4 /* Photo.swift in Sources */,
 				33C23BAE23347E81000DCBE4 /* AppDelegate.swift in Sources */,
 				33C23BB023347E81000DCBE4 /* SceneDelegate.swift in Sources */,
