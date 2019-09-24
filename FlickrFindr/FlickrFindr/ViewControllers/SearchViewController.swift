@@ -9,11 +9,11 @@
 import UIKit
 
 class SearchViewController: UIViewController {
-    
-    @IBOutlet weak var searchBar: UISearchBar!
+
     @IBOutlet weak var tableView: UITableView!
 
-    var imageProvider: ImageProvider?
+    let imageProvider = ImageProvider()
+    let recentSearchManager = RecentSearchManager()
 
     lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -22,12 +22,24 @@ class SearchViewController: UIViewController {
         return activityIndicator
     }()
 
+    lazy var searchController: UISearchController = {
+        let recentSearchViewController = RecentSearchViewController(recentSearchManager: recentSearchManager)
+        let searchController = UISearchController(searchResultsController: recentSearchViewController)
+        searchController.searchBar.autocapitalizationType = .none
+        searchController.searchBar.autocapitalizationType = .none
+        searchController.searchBar.enablesReturnKeyAutomatically = true
+        searchController.searchBar.placeholder = NSLocalizedString("What would you like to see?", comment: "Placeholder text in search bar.")
+        searchController.searchBar.delegate = self
+        searchController.automaticallyShowsCancelButton = true
+        searchController.showsSearchResultsController = true
+        searchController.obscuresBackgroundDuringPresentation = false
+        return searchController
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = "Flickr Findr"
-
-        imageProvider = ImageProvider()
 
         view.backgroundColor = .systemBackground
 
@@ -37,17 +49,18 @@ class SearchViewController: UIViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
 
-        searchBar.delegate = self
-        searchBar.placeholder = NSLocalizedString("What would you like to see?", comment: "Placeholder text in search bar.")
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
 
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 300
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.keyboardDismissMode = .onDrag
     }
 
     private func presentNoResultsAlert() {
-        let alertController = UIAlertController(title: NSLocalizedString("No Results Founds", comment: "Alert user sees is their search returned zero results"), message: nil, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "User accepting that their search returned zero results"), style: .default, handler: nil))
+        let alertController = UIAlertController(title: NSLocalizedString("No Results Found", comment: "The alert the user sees if their search returned zero results"), message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Button user taps to accept that their search returned zero results"), style: .default, handler: nil))
         navigationController?.present(alertController, animated: true, completion: nil)
     }
 }
@@ -61,17 +74,18 @@ extension SearchViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return imageProvider?.photos.count ?? 0
+        return imageProvider.photos.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell", for: indexPath) as?   PhotoTableViewCell,
-            let photo = imageProvider?.photos[indexPath.row]
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell", for: indexPath) as? PhotoTableViewCell
             else { return UITableViewCell() }
+
+        let photo = imageProvider.photos[indexPath.row]
 
         cell.configure(with: photo)
 
-        imageProvider?.fetchImage(for: photo) { result in
+        imageProvider.fetchImage(for: photo) { result in
             DispatchQueue.main.async {
                 if case let .success(image) = result,
                     let indexPathOfCell = tableView.indexPath(for: cell),
@@ -92,8 +106,7 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let photo = imageProvider?.photos[safe: indexPath.row],
-            let imageProvider = imageProvider
+        guard let photo = imageProvider.photos[safe: indexPath.row]
             else { return }
 
         let photoDetailViewController = PhotoDetailViewController(photo: photo, imageProvider: imageProvider)
@@ -109,9 +122,9 @@ extension SearchViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
 
         indexPaths.forEach { indexPath in
-            guard let photo = imageProvider?.photos[safe: indexPath.row] else { return }
+            guard let photo = imageProvider.photos[safe: indexPath.row] else { return }
 
-            imageProvider?.fetchImage(for: photo) { _ in } // Image is now in the cache
+            imageProvider.fetchImage(for: photo) { _ in } // Image is now in the cache
         }
     }
 
@@ -121,28 +134,20 @@ extension SearchViewController: UITableViewDataSourcePrefetching {
 
 extension SearchViewController: UISearchBarDelegate {
 
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        return true
-    }
-
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text?.isEmpty == true {
-            // Reload table view with previous search suggestions
-        }
-    }
-
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-        imageProvider?.clearPhotosSearchResults()
+        searchController.dismiss(animated: false, completion: nil)
+        imageProvider.clearPhotosSearchResults()
         tableView.reloadData()
 
         guard let searchTerm = searchBar.text,
             !searchTerm.isEmpty
             else { return }
 
+        recentSearchManager.insert(searchTerm: searchTerm)
+
         activityIndicator.startAnimating()
 
-        imageProvider?.fetchPhotos(for: searchTerm) { [weak self] result in
+        imageProvider.fetchPhotos(for: searchTerm) { [weak self] result in
             DispatchQueue.main.async {
                 self?.activityIndicator.stopAnimating()
                 self?.tableView.reloadData()
@@ -151,12 +156,12 @@ extension SearchViewController: UISearchBarDelegate {
                 case .failure(let error):
                     print(error)
                 case .success(_):
-                    if self?.imageProvider?.photos.isEmpty == true {
+                    if self?.imageProvider.photos.isEmpty == true {
                         self?.presentNoResultsAlert()
                     }
                 }
             }
         }
     }
-    
+
 }

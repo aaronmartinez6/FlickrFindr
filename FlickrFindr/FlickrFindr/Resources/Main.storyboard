@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Ude-ax-Uan">
-                                <rect key="frame" x="0.0" y="144" width="414" height="718"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PhotoCell" rowHeight="383" id="cl1-oc-EdW" customClass="PhotoTableViewCell" customModule="FlickrFindr" customModuleProvider="target">
@@ -26,7 +26,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="383"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="hFQ-jS-fOj">
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="hFQ-jS-fOj">
                                                     <rect key="frame" x="41.5" y="19" width="331" height="353"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GHQ-Va-kZh">
@@ -63,26 +63,18 @@
                                     <outlet property="prefetchDataSource" destination="Ou2-uB-tIE" id="70p-vL-TmP"/>
                                 </connections>
                             </tableView>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="3YU-nd-Txc">
-                                <rect key="frame" x="0.0" y="88" width="394" height="56"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="3YU-nd-Txc" firstAttribute="leading" secondItem="uJl-4E-B0e" secondAttribute="leading" id="AVJ-QA-cDd"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="3YU-nd-Txc" secondAttribute="trailing" id="RIg-OW-2vw"/>
-                            <constraint firstItem="Ude-ax-Uan" firstAttribute="top" secondItem="3YU-nd-Txc" secondAttribute="bottom" id="Uc2-XR-UgF"/>
                             <constraint firstItem="uJl-4E-B0e" firstAttribute="trailing" secondItem="Ude-ax-Uan" secondAttribute="trailing" id="YQX-DW-hEE"/>
-                            <constraint firstItem="3YU-nd-Txc" firstAttribute="top" secondItem="uJl-4E-B0e" secondAttribute="top" id="kqp-tE-TNh"/>
                             <constraint firstItem="uJl-4E-B0e" firstAttribute="bottom" secondItem="Ude-ax-Uan" secondAttribute="bottom" id="pru-mR-W5F"/>
+                            <constraint firstItem="Ude-ax-Uan" firstAttribute="top" secondItem="uJl-4E-B0e" secondAttribute="top" id="qcK-Z9-Dqp"/>
                             <constraint firstItem="Ude-ax-Uan" firstAttribute="leading" secondItem="uJl-4E-B0e" secondAttribute="leading" id="ugb-7U-kEx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="uJl-4E-B0e"/>
                     </view>
                     <navigationItem key="navigationItem" id="NYi-NO-MxK"/>
                     <connections>
-                        <outlet property="searchBar" destination="3YU-nd-Txc" id="bVy-bd-0Il"/>
                         <outlet property="tableView" destination="Ude-ax-Uan" id="fe1-h6-adS"/>
                     </connections>
                 </viewController>
