@@ -33,11 +33,15 @@ class ImageProvider {
 
     private(set) var photos = [Photo]()
 
+    private var currentSearchTerm = ""
     private var currentPage = 0
 
-    func fetchPhotos(for searchTerm: String, completion: @escaping(Result<Bool,ImageProviderError>) -> Void) {
+    func fetchPhotos(for searchTerm: String, page: Int = 1, completion: @escaping(Result<[Photo],ImageProviderError>) -> Void) {
 
-        guard let photosSearchURL = searchURL(for: searchTerm) else { return completion(.failure(.failedToConstructURL)) }
+        guard let photosSearchURL = searchURL(for: searchTerm, page: page) else { return completion(.failure(.failedToConstructURL)) }
+
+        currentSearchTerm = searchTerm
+        currentPage = page
 
         URLSession.shared.dataTask(with: photosSearchURL) { [weak self] data, response, error in
             if let error = error {
@@ -48,8 +52,14 @@ class ImageProvider {
 
             let decoder = JSONDecoder()
             do {
-                self?.photos = try decoder.decode(TopLevelObject.self, from: data).photosDictionary.photos
-                completion(.success(true))
+                let photos = try decoder.decode(TopLevelObject.self, from: data).photosDictionary.photos
+
+                if page > 0 {
+                    self?.photos.append(contentsOf: photos)
+                } else {
+                    self?.photos = photos
+                }
+                completion(.success(photos))
             } catch {
                 completion(.failure(.failedToDecodeObject(error)))
             }
@@ -57,13 +67,19 @@ class ImageProvider {
         }.resume()
     }
 
+    func fetchNext(completion: @escaping(Result<[Photo],ImageProviderError>) -> Void) {
+        let nextPage = currentPage + 1
+        fetchPhotos(for: currentSearchTerm, page: nextPage, completion: completion)
+    }
+
     // Photo search url format https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=1508443e49213ff84d566777dc211f2a&text=dog&format=json&per_page=25
-    private func searchURL(for searchTerm: String) -> URL? {
+    private func searchURL(for searchTerm: String, page: Int) -> URL? {
         let parameters = [
             ImageProvider.methodUrlParameterKey:"flickr.photos.search",
             ImageProvider.apiKeyUrlParameterKey:apiKey,
             ImageProvider.formatUrlParameterKey:"json",
             ImageProvider.noJsonCallbackUrlParameterKey:"1",
+            ImageProvider.pageUrlParameterKey:String(page),
             ImageProvider.perPageUrlParameterKey:"25",
             ImageProvider.textUrlParameterKey:searchTerm
         ]

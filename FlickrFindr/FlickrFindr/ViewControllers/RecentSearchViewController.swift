@@ -6,9 +6,15 @@
 //  Copyright © 2019 Aaron Martinez. All rights reserved.
 //
 
+protocol RecentSearchViewControllerDelegate: class {
+    func recentSearchTermTapped(searchTerm: String)
+}
+
 import UIKit
 
 class RecentSearchViewController: UIViewController {
+
+    weak var delegate: RecentSearchViewControllerDelegate?
 
     let recentSearchManager: RecentSearchManager
 
@@ -67,8 +73,9 @@ extension RecentSearchViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell", for: indexPath)
         let recentSearchTerm = recentSearchManager.recentSearchTerms()[safe: indexPath.row] ?? ""
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell", for: indexPath)
         cell.textLabel?.text = recentSearchTerm
         return cell
     }
@@ -77,7 +84,10 @@ extension RecentSearchViewController: UITableViewDataSource {
 extension RecentSearchViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Tapped recent search")
+        guard let searchTerm = recentSearchManager.recentSearchTerms()[safe: indexPath.row]
+            else { return }
+
+        delegate?.recentSearchTermTapped(searchTerm: searchTerm)
     }
 }
 

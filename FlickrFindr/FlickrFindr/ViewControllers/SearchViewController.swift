@@ -24,6 +24,7 @@ class SearchViewController: UIViewController {
 
     lazy var searchController: UISearchController = {
         let recentSearchViewController = RecentSearchViewController(recentSearchManager: recentSearchManager)
+        recentSearchViewController.delegate = self
         let searchController = UISearchController(searchResultsController: recentSearchViewController)
         searchController.searchBar.autocapitalizationType = .none
         searchController.searchBar.autocapitalizationType = .none
@@ -78,6 +79,9 @@ extension SearchViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        fetchNextPage(indexPath: indexPath)
+
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PhotoCell", for: indexPath) as? PhotoTableViewCell
             else { return UITableViewCell() }
 
@@ -97,6 +101,26 @@ extension SearchViewController: UITableViewDataSource {
         }
 
         return cell
+    }
+
+    private func fetchNextPage(indexPath: IndexPath) {
+        if (indexPath.row + 3) % 25 == 0 {
+            imageProvider.fetchNext { [weak self] result in
+                DispatchQueue.main.async {
+                    if case let .success(newPhotos) = result,
+                        let imageProvider = self?.imageProvider {
+                        let firstRow = imageProvider.photos.count - newPhotos.count
+
+                        var indexPaths = [IndexPath]()
+                        for index in 0..<newPhotos.count {
+                            indexPaths.append(IndexPath(row: index + firstRow, section: 0))
+                        }
+                        
+                        self?.tableView.insertRows(at: indexPaths, with: .none)
+                    }
+                }
+            }
+        }
     }
 
 }
@@ -135,6 +159,7 @@ extension SearchViewController: UITableViewDataSourcePrefetching {
 extension SearchViewController: UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
         searchController.dismiss(animated: false, completion: nil)
         imageProvider.clearPhotosSearchResults()
         tableView.reloadData()
@@ -164,4 +189,12 @@ extension SearchViewController: UISearchBarDelegate {
         }
     }
 
+}
+
+extension SearchViewController: RecentSearchViewControllerDelegate {
+
+    func recentSearchTermTapped(searchTerm: String) {
+        searchController.searchBar.text = searchTerm
+        searchBarSearchButtonClicked(searchController.searchBar)
+    }
 }
