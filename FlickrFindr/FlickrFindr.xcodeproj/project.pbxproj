@@ -21,6 +21,10 @@
 		33C23DC52338668E000DCBE4 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C23DC42338668E000DCBE4 /* Array+Extensions.swift */; };
 		33C23F282339942D000DCBE4 /* RecentSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C23F272339942D000DCBE4 /* RecentSearchViewController.swift */; };
 		33C23F2B2339B83E000DCBE4 /* RecentSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C23F2A2339B83E000DCBE4 /* RecentSearchManager.swift */; };
+		33C4EEBE233AD6320098B5A4 /* RecentSearchManagerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C4EEBD233AD6320098B5A4 /* RecentSearchManagerService.swift */; };
+		33C4EEC0233AD9250098B5A4 /* RecentSearchManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C4EEBF233AD9250098B5A4 /* RecentSearchManagerTests.swift */; };
+		33D22820233C245B001AB6AB /* UserDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D2281F233C245B001AB6AB /* UserDataStore.swift */; };
+		33D22822233C2628001AB6AB /* RecentSearchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D22821233C2628001AB6AB /* RecentSearchStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +56,10 @@
 		33C23DC42338668E000DCBE4 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		33C23F272339942D000DCBE4 /* RecentSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchViewController.swift; sourceTree = "<group>"; };
 		33C23F2A2339B83E000DCBE4 /* RecentSearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchManager.swift; sourceTree = "<group>"; };
+		33C4EEBD233AD6320098B5A4 /* RecentSearchManagerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchManagerService.swift; sourceTree = "<group>"; };
+		33C4EEBF233AD9250098B5A4 /* RecentSearchManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchManagerTests.swift; sourceTree = "<group>"; };
+		33D2281F233C245B001AB6AB /* UserDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataStore.swift; sourceTree = "<group>"; };
+		33D22821233C2628001AB6AB /* RecentSearchStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +107,6 @@
 				33C23D2A233566BB000DCBE4 /* Providers */,
 				33C23F292339B785000DCBE4 /* Helpers */,
 				33C23D2623356635000DCBE4 /* Resources */,
-				33C23F2A2339B83E000DCBE4 /* RecentSearchManager.swift */,
 			);
 			path = FlickrFindr;
 			sourceTree = "<group>";
@@ -107,6 +114,7 @@
 		33C23BC323347E8A000DCBE4 /* FlickrFindrTests */ = {
 			isa = PBXGroup;
 			children = (
+				33C4EEBF233AD9250098B5A4 /* RecentSearchManagerTests.swift */,
 				33C23BC423347E8A000DCBE4 /* FlickrFindrTests.swift */,
 				33C23BC623347E8A000DCBE4 /* Info.plist */,
 			);
@@ -139,7 +147,7 @@
 			children = (
 				33C23D2B233567AF000DCBE4 /* SearchViewController.swift */,
 				33C23DC2233697A4000DCBE4 /* PhotoDetailViewController.swift */,
-				33C23F272339942D000DCBE4 /* RecentSearchViewController.swift */,
+				33D2281E233C1F75001AB6AB /* RecentSearchList */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -166,6 +174,18 @@
 				33C23DC42338668E000DCBE4 /* Array+Extensions.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		33D2281E233C1F75001AB6AB /* RecentSearchList */ = {
+			isa = PBXGroup;
+			children = (
+				33D2281F233C245B001AB6AB /* UserDataStore.swift */,
+				33D22821233C2628001AB6AB /* RecentSearchStore.swift */,
+				33C4EEBD233AD6320098B5A4 /* RecentSearchManagerService.swift */,
+				33C23F2A2339B83E000DCBE4 /* RecentSearchManager.swift */,
+				33C23F272339942D000DCBE4 /* RecentSearchViewController.swift */,
+			);
+			path = RecentSearchList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,7 +289,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33D22822233C2628001AB6AB /* RecentSearchStore.swift in Sources */,
+				33D22820233C245B001AB6AB /* UserDataStore.swift in Sources */,
 				33C23D29233566B5000DCBE4 /* ImageProvider.swift in Sources */,
+				33C4EEBE233AD6320098B5A4 /* RecentSearchManagerService.swift in Sources */,
 				33C23D2C233567AF000DCBE4 /* SearchViewController.swift in Sources */,
 				33C23F2B2339B83E000DCBE4 /* RecentSearchManager.swift in Sources */,
 				33C23D3023357B43000DCBE4 /* PhotoTableViewCell.swift in Sources */,
@@ -286,6 +309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33C4EEC0233AD9250098B5A4 /* RecentSearchManagerTests.swift in Sources */,
 				33C23BC523347E8A000DCBE4 /* FlickrFindrTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

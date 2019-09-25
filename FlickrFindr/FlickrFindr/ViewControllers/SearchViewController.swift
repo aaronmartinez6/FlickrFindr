@@ -13,7 +13,7 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     let imageProvider = ImageProvider()
-    let recentSearchManager = RecentSearchManager()
+    let recentSearchManager = RecentSearchManager(userDataStore: RecentSearchStore())
 
     lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)

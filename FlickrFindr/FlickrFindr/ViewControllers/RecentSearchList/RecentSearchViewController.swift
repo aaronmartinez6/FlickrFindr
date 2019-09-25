@@ -16,14 +16,14 @@ class RecentSearchViewController: UIViewController {
 
     weak var delegate: RecentSearchViewControllerDelegate?
 
-    let recentSearchManager: RecentSearchManager
+    private let recentSearchManager: RecentSearchManagerService
 
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.backgroundColor = .systemGroupedBackground
+        tableView.backgroundColor = .systemBackground
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag
         return tableView
