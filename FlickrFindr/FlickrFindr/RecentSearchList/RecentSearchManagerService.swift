@@ -12,4 +12,5 @@ protocol RecentSearchManagerService {
     
     func insert(searchTerm: String)
     func recentSearchTerms() -> [String]
+    func clearSearchHistory()
 }

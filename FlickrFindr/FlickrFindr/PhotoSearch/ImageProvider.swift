@@ -29,7 +29,11 @@ class ImageProvider {
     private static let pageUrlParameterKey = "page"
     private static let textUrlParameterKey = "text"
 
-    private let cache = NSCache<NSURL, UIImage>()
+    private let cache: NSCache<NSURL, UIImage> = {
+        let cache = NSCache<NSURL, UIImage>()
+        cache.countLimit = 200
+        return cache
+    }()
 
     private(set) var photos = [Photo]()
 

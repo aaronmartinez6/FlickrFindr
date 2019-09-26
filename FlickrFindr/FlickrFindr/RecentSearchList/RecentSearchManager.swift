@@ -17,10 +17,10 @@ class RecentSearchManager: RecentSearchManagerService {
 
     weak var delegate: RecentSearchManagerDelegate?
 
-    let recentSearchStore: UserDataStore
+    private let recentSearchStore: UserDataStore
 
-    init(userDataStore: UserDataStore) {
-        self.recentSearchStore = userDataStore
+    init(recentSearchStore: UserDataStore) {
+        self.recentSearchStore = recentSearchStore
     }
 
     func recentSearchTerms() -> [String] {
@@ -30,6 +30,10 @@ class RecentSearchManager: RecentSearchManagerService {
     func insert(searchTerm: String) {
         recentSearchStore.insertContent(searchTerm)
         delegate?.recentSearchTermsWereUpdated()
+    }
+
+    func clearSearchHistory() {
+        recentSearchStore.deleteAllContents()
     }
     
 }

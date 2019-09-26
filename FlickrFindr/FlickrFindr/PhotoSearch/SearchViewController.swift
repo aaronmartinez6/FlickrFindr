@@ -12,22 +12,22 @@ class SearchViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
 
-    let imageProvider = ImageProvider()
-    let recentSearchManager = RecentSearchManager(userDataStore: RecentSearchStore())
+    private let imageProvider = ImageProvider()
+    private let recentSearchManager = RecentSearchManager(recentSearchStore: RecentSearchStore())
 
-    lazy var activityIndicator: UIActivityIndicatorView = {
+    private lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.hidesWhenStopped = true
         return activityIndicator
     }()
 
-    lazy var searchController: UISearchController = {
+    private lazy var searchController: UISearchController = {
         let recentSearchViewController = RecentSearchViewController(recentSearchManager: recentSearchManager)
         recentSearchViewController.delegate = self
         let searchController = UISearchController(searchResultsController: recentSearchViewController)
         searchController.searchBar.autocapitalizationType = .none
-        searchController.searchBar.autocapitalizationType = .none
+        searchController.searchBar.autocorrectionType = .default
         searchController.searchBar.enablesReturnKeyAutomatically = true
         searchController.searchBar.placeholder = NSLocalizedString("What would you like to see?", comment: "Placeholder text in search bar.")
         searchController.searchBar.delegate = self
@@ -104,7 +104,7 @@ extension SearchViewController: UITableViewDataSource {
     }
 
     private func fetchNextPage(indexPath: IndexPath) {
-        if (indexPath.row + 3) % 25 == 0 {
+        if indexPath.row % 25 == 0 {
             imageProvider.fetchNext { [weak self] result in
                 DispatchQueue.main.async {
                     if case let .success(newPhotos) = result,
@@ -191,10 +191,16 @@ extension SearchViewController: UISearchBarDelegate {
 
 }
 
+// MARK: - RecentSearchViewControllerDelegate
+
 extension SearchViewController: RecentSearchViewControllerDelegate {
 
     func recentSearchTermTapped(searchTerm: String) {
         searchController.searchBar.text = searchTerm
         searchBarSearchButtonClicked(searchController.searchBar)
+    }
+
+    func clearSearchHistoryTapped() {
+        recentSearchManager.clearSearchHistory()
     }
 }

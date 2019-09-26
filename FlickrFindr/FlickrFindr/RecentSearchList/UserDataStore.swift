@@ -12,4 +12,5 @@ protocol UserDataStore {
 
     func fetchContents() -> [String]
     func insertContent(_ string: String)
+    func deleteAllContents()
 }

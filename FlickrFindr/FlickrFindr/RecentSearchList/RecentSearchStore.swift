@@ -47,6 +47,11 @@ class RecentSearchStore: UserDataStore {
         save()
     }
 
+    func deleteAllContents() {
+        recentSearches = []
+        save()
+    }
+
     private func save() {
         guard let url = filePathURL
             else { return }
